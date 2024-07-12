@@ -31,11 +31,11 @@ Usage : -
 Enter your username and click Login.
 Select a user from the list to start chatting.
 Type a message and press Enter or click the Send button.
-you can delete the message on clicking on trash icon and it will delete the message for that session for that user again you will login with the same user uh can see the messages
+you can delete the message on clicking on trash icon and it will delete the whole chat for that logged in user but not for the other person
 
 We have shown the user name by which uh are logged in and just after that we have an icon to logout for that user
 
-
+also the message which will be forwarded by logged in user he/she have option to delete that message for me and for everyone 
 
  -->
 

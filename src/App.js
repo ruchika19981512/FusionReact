@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Login from './components/Login';
 import Chat from './components/Chat';
 import UserList from './components/UserList';
@@ -8,33 +8,9 @@ import { FaSignOutAlt } from 'react-icons/fa';
 const App = () => {
   const [username, setUsername] = useState('');
   const [messages, setMessages] = useState([]);
-  const [visibleMessages, setVisibleMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [unreadMessages, setUnreadMessages] = useState({});
-  const [clearedChats, setClearedChats] = useState(new Set());
-
-  // Load clearedChats from localStorage on initial load
-  useEffect(() => {
-    const storedClearedChats = localStorage.getItem('clearedChats');
-    if (storedClearedChats) {
-      setClearedChats(new Set(JSON.parse(storedClearedChats)));
-    }
-  }, []);
-
-  // Update visibleMessages whenever messages or clearedChats change
-  useEffect(() => {
-    const filteredMessages = messages.filter(
-      (message) =>
-        !clearedChats.has(message.id) // Assuming message.id uniquely identifies each message
-    );
-    setVisibleMessages(filteredMessages);
-  }, [messages, clearedChats]);
-
-  // Save clearedChats to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('clearedChats', JSON.stringify(Array.from(clearedChats)));
-  }, [clearedChats]);
 
   const addMessage = (message) => {
     setMessages([...messages, message]);
@@ -55,7 +31,6 @@ const App = () => {
     setUsername('');
     setSelectedUser(null);
     setUnreadMessages({});
-    setClearedChats(new Set());
   };
 
   const markMessagesAsRead = (user) => {
@@ -66,22 +41,22 @@ const App = () => {
     });
   };
 
+  const clearMessages = (updatedMessages) => {
+    setMessages(updatedMessages);
+  };
+
   const clearChat = (user) => {
-    // Mark all messages with the user as cleared
-    const messagesToClear = messages.filter(
-      (message) => message.from === user || message.to === user
-    );
-
-    const updatedClearedChats = new Set(clearedChats);
-    messagesToClear.forEach((message) => {
-      updatedClearedChats.add(message.id); // Assuming message.id uniquely identifies each message
+    const updatedMessages = messages.map((msg) => {
+      if (msg.from === user || msg.to === user) {
+        if (msg.from === username) {
+          return { ...msg, chatClearedForFromUser: true };
+        } else {
+          return { ...msg, chatClearedForToUser: true };
+        }
+      }
+      return msg;
     });
-    setClearedChats(updatedClearedChats);
-
-    // If the current selected user is the one being cleared, reset the selection
-    if (selectedUser === user) {
-      setSelectedUser(null);
-    }
+    setMessages(updatedMessages);
   };
 
   if (!username) {
@@ -93,7 +68,6 @@ const App = () => {
           setUsername(name);
           setSelectedUser(null);
           setUnreadMessages({});
-          setClearedChats(new Set());
         }}
       />
     );
@@ -130,12 +104,10 @@ const App = () => {
           <Chat
             username={username}
             selectedUser={selectedUser}
-            messages={visibleMessages.filter(
-              (message) =>
-                (message.from === username || message.to === username)
-            )}
+            messages={messages}
             addMessage={addMessage}
             markMessagesAsRead={markMessagesAsRead}
+            clearMessages={clearMessages}
           />
         ) : (
           <div className="chat-placeholder">

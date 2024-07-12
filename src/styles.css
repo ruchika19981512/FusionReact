@@ -38,7 +38,6 @@
   margin-right: 8px; /* Space between emoji and text */
 }
 
-
 .current-user {
   padding: 10px;
   background-color: #f0f0f0;
@@ -169,7 +168,7 @@ li:hover {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: #49bbac; /* Green background color like WhatsApp */
+  background-color: rgb(140, 188, 216);
   padding: 10px;
 }
 
@@ -181,7 +180,6 @@ li:hover {
   margin-bottom: 10px;
   background-color: rgb(255, 255, 255); /* White background for messages */
 }
-
 
 .message-form {
   display: flex;
@@ -242,14 +240,21 @@ li:hover {
 
 .message-container {
   display: flex;
-  width: 40%;
+  width: 40%; /* Keep the width at 40% */
   margin-bottom: 10px;
+  flex-direction: column; /* Allow the container to grow vertically */
+  word-wrap: break-word; /* Ensures words break properly */
+  overflow-wrap: break-word; /* Ensure long words break */
+  white-space: pre-wrap; /* Ensure white-space is preserved and lines break as needed */
 }
 
 .message {
   padding: 10px;
-  border-radius: 50px;
-  width: 100%;
+  border-radius: 20px; /* Adjusted for better UI */
+  background-color: #dcf8c6; /* Light green for sent messages */
+  max-width: 100%; /* Ensure the message doesn't exceed the container width */
+  overflow-wrap: break-word; /* Ensure long words break */
+  white-space: pre-wrap; /* Ensure white-space is preserved and lines break as needed */
 }
 
 .sent {
@@ -267,8 +272,6 @@ li:hover {
   justify-content: space-between; /* Ensure space between items */
   align-items: center; /* Align items vertically */
 }
-
-/* message delete  */
 
 .message-options {
   position: relative;
